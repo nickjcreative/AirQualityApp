@@ -44,13 +44,37 @@ document.getElementById("checkAQI").addEventListener("click", async () => {
 
 // Botón para usar ubicación actual
 document.getElementById("useMyLocation").addEventListener("click", async () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            const map = initializeMap([longitude, latitude]);
-            addMarker(map, [longitude, latitude], "You are here!");
-        });
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // Muestra las coordenadas en la consola para verificar
+                console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
+                // Inicializa el mapa centrado en la ubicación actual
+                const map = initializeMap([longitude, latitude]);
+                addMarker(map, [longitude, latitude], "You are here!");
+            },
+            (error) => {
+                // Manejo de errores
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("User denied the request for Geolocation.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Location information is unavailable.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("The request to get user location timed out.");
+                        break;
+                    default:
+                        alert("An unknown error occurred.");
+                        break;
+                }
+            }
+        );
     } else {
         alert("Geolocation is not supported by your browser.");
     }
