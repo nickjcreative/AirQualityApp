@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Quality Checker</title>
-    <!-- Hoja de estilos -->
     <link rel="stylesheet" href="styles.css">
-    <!-- SDK de Azure Maps -->
     <script src="https://atlas.microsoft.com/sdk/js/atlas.min.js"></script>
     <script>
         const azureMapsKey = "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj"; <!-- Reemplaza con tu clave de Azure Maps -->
@@ -17,21 +15,22 @@
         <h1>Air Quality Checker</h1>
     </header>
     <main>
-        <!-- Formulario para ingresar la ubicación -->
         <div class="form-container">
             <input type="text" id="location" placeholder="Enter your location">
+            <select id="activity">
+                <option value="running">Running</option>
+                <option value="walking">Walking</option>
+                <option value="cycling">Cycling</option>
+            </select>
             <button id="checkAQI">Check Air Quality</button>
             <button id="useMyLocation">Use My Location</button>
         </div>
-        <!-- Mapa interactivo -->
         <div id="map" class="map"></div>
-        <!-- Resultado del AQI -->
         <div id="result" class="result"></div>
     </main>
     <footer>
         <p>Powered by OpenWeatherMap, OpenCage, and Azure Maps</p>
     </footer>
-    <!-- Archivo JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
