@@ -27,6 +27,7 @@
     <script>
         let latitude = null;
         let longitude = null;
+        const locationInput = document.getElementById("location");
 
         // Detect Geolocation
         document.getElementById("useMyLocation").addEventListener("click", function () {
@@ -34,13 +35,13 @@
                 navigator.geolocation.getCurrentPosition(function (position) {
                     latitude = position.coords.latitude;
                     longitude = position.coords.longitude;
-                    alert(`Location detected: ${latitude}, ${longitude}`);
+                    alert(`Location detected: Latitude ${latitude}, Longitude ${longitude}`);
 
-                    // Rellenar automáticamente los campos de entrada
-                    const locationInput = document.getElementById("location");
+                    // Actualiza el campo location con latitud y longitud
                     locationInput.value = `Lat: ${latitude}, Lon: ${longitude}`;
-                }, function () {
-                    alert("Unable to retrieve your location.");
+                }, function (error) {
+                    alert("Unable to retrieve your location. Please try again.");
+                    console.error(error);
                 });
             } else {
                 alert("Geolocation is not supported by your browser.");
@@ -51,13 +52,12 @@
         document.getElementById("locationForm").addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            // Captura los datos del formulario
-            const location = document.getElementById("location").value;
+            const location = locationInput.value;
             const activity = document.getElementById("activity").value;
 
-            // Construir el payload
+            // Construcción del payload dinámico
             let payload = {};
-            if (latitude && longitude) {
+            if (latitude !== null && longitude !== null) {
                 payload = { latitude, longitude, activity };
             } else if (location) {
                 payload = { location, activity };
@@ -66,16 +66,24 @@
                 return;
             }
 
-            // Enviar la solicitud al endpoint de Logic Apps
-            const response = await fetch("URL_DE_TU_LOGIC_APP", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
+            // Llamada al backend
+            try {
+                const response = await fetch("URL_DE_TU_LOGIC_APP", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
 
-            // Mostrar la respuesta
-            const data = await response.json();
-            document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                alert("There was an error processing your request. Please try again later.");
+                console.error(error);
+            }
         });
     </script>
 </body>
