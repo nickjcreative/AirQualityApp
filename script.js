@@ -1,10 +1,10 @@
 // Clave de Azure Maps
-const azureMapsKey = "YOUR_AZURE_MAPS_KEY"; // Reemplaza con tu clave
+const azureMapsKey = "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj"; // Reemplaza con tu clave de Azure Maps
 
 // Inicializar Azure Maps
 function initializeMap(centerCoordinates = [2.1734, 41.3851]) {
     const map = new atlas.Map("map", {
-        center: centerCoordinates, // Coordenadas iniciales
+        center: centerCoordinates,
         zoom: 12,
         view: "Auto",
         authOptions: {
@@ -33,8 +33,9 @@ function addMarker(map, coordinates, label) {
 // Botón para verificar AQI
 document.getElementById("checkAQI").addEventListener("click", async () => {
     const location = document.getElementById("location").value;
+    const activity = document.getElementById("activity").value;
     if (location) {
-        alert(`Checking AQI for: ${location}`);
+        alert(`Checking AQI for: ${location}, Activity: ${activity}`);
         // Aquí se integrará Logic Apps
     } else {
         alert("Please enter a location.");
