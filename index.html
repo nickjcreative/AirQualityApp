@@ -4,87 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Quality Checker</title>
+    <!-- Hoja de estilos -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- SDK de Azure Maps -->
+    <script src="https://atlas.microsoft.com/sdk/js/atlas.min.js"></script>
+    <script>
+        const azureMapsKey = "YOUR_AZURE_MAPS_KEY"; <!-- Reemplaza con tu clave de Azure Maps -->
+    </script>
 </head>
 <body>
-    <h1>Check Air Quality</h1>
-    <form id="locationForm">
-        <label for="location">Enter your location:</label>
-        <input type="text" id="location" placeholder="Enter address or city">
-
-        <label for="activity">What outdoor activity do you want to do?</label>
-        <select id="activity">
-            <option value="running">Running</option>
-            <option value="walking">Walking</option>
-            <option value="cycling">Cycling</option>
-        </select>
-
-        <p>Or:</p>
-        <button type="button" id="useMyLocation">Use My Location</button>
-        <button type="submit">Check Air Quality</button>
-    </form>
-    <pre id="result"></pre>
-
-    <script>
-        let latitude = null;
-        let longitude = null;
-        const locationInput = document.getElementById("location");
-
-        // Detect Geolocation
-        document.getElementById("useMyLocation").addEventListener("click", function () {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-                    alert(`Location detected: Latitude ${latitude}, Longitude ${longitude}`);
-
-                    // Actualiza el campo location con latitud y longitud
-                    locationInput.value = `Lat: ${latitude}, Lon: ${longitude}`;
-                }, function (error) {
-                    alert("Unable to retrieve your location. Please try again.");
-                    console.error(error);
-                });
-            } else {
-                alert("Geolocation is not supported by your browser.");
-            }
-        });
-
-        // Submit the Form
-        document.getElementById("locationForm").addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            const location = locationInput.value;
-            const activity = document.getElementById("activity").value;
-
-            // Construcción del payload dinámico
-            let payload = {};
-            if (latitude !== null && longitude !== null) {
-                payload = { latitude, longitude, activity };
-            } else if (location) {
-                payload = { location, activity };
-            } else {
-                alert("Please enter a location or use geolocation.");
-                return;
-            }
-
-            // Llamada al backend
-            try {
-                const response = await fetch("URL_DE_TU_LOGIC_APP", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                document.getElementById("result").textContent = JSON.stringify(data, null, 2);
-            } catch (error) {
-                alert("There was an error processing your request. Please try again later.");
-                console.error(error);
-            }
-        });
-    </script>
+    <header>
+        <h1>Air Quality Checker</h1>
+    </header>
+    <main>
+        <!-- Formulario para ingresar la ubicación -->
+        <div class="form-container">
+            <input type="text" id="location" placeholder="Enter your location">
+            <button id="checkAQI">Check Air Quality</button>
+            <button id="useMyLocation">Use My Location</button>
+        </div>
+        <!-- Mapa interactivo -->
+        <div id="map" class="map"></div>
+        <!-- Resultado del AQI -->
+        <div id="result" class="result"></div>
+    </main>
+    <footer>
+        <p>Powered by OpenWeatherMap, OpenCage, and Azure Maps</p>
+    </footer>
+    <!-- Archivo JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
