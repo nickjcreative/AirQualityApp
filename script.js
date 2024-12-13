@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 zoom: 10,
                 authOptions: {
                     authType: 'subscriptionKey',
-                    subscriptionKey: "<TU_CLAVE_DE_AZURE_MAPS>" // Reemplaza con tu clave
+                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave
                 }
             });
 
