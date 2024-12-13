@@ -3,37 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather and AQI Checker</title>
+    <title>Movepure - Quality Air Checker</title>
+    <link href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" rel="stylesheet">
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            margin: 20px;
+            display: flex;
+            height: 100vh;
+            flex-direction: row;
+        }
+        #left-panel {
+            width: 30%;
+            background-color: #cbe8eb;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #left-panel h1 {
+            font-size: 2rem;
+            color: #006b6b;
+            text-align: center;
         }
         #map {
-            width: 100%;
-            height: 400px;
-            margin-top: 20px;
+            width: 70%;
+            height: 100%;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            border: 1px solid #006b6b;
+            font-size: 1rem;
+        }
+        form button {
+            background-color: #006b6b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
         }
         #weather-info {
             margin-top: 20px;
+            font-size: 1rem;
+        }
+        .activities {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .activity-button {
+            background-color: #cbe8eb;
+            border: 2px solid #006b6b;
+            border-radius: 20px;
+            padding: 15px 30px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #006b6b;
+            width: 100px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 </head>
 <body>
-    <h1>Weather and AQI Checker</h1>
-    <form id="location-form">
-        <label for="location">Enter Location:</label>
-        <input type="text" id="location" name="location" required>
-        <button type="submit">Search</button>
-    </form>
+    <!-- Panel Izquierdo -->
+    <div id="left-panel">
+        <h1>movepure</h1>
+        <p>Realtime Checker Quality Air for Move</p>
+        <form id="location-form">
+            <label for="location">Introduce tu ubicación</label>
+            <input type="text" id="location" name="location" required placeholder="Escribe tu ubicación">
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="weather-info" class="hidden">
+            <p><strong>Location:</strong> <span id="location-name"></span></p>
+            <p><strong>Quality Air:</strong> <span id="quality-air"></span></p>
+            <p><strong>Que hacer?:</strong> <span id="recommendations"></span></p>
+            <div class="activities">
+                <div class="activity-button">YOGA</div>
+                <div class="activity-button">WALK</div>
+                <div class="activity-button">RUN</div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Container for Azure Map -->
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <!-- Mapa -->
+    <div id="map" class="hidden"></div>
 
-    <!-- Container for AQI recommendations -->
-    <div id="weather-info"></div>
-
-    <!-- Include JavaScript file -->
     <script src="script.js" defer></script>
 </body>
 </html>
