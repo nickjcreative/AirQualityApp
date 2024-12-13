@@ -1,75 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovePure</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: row;
+document.addEventListener('DOMContentLoaded', function () {
+    // URL de tu Logic App
+    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de tu trigger HTTP
+
+    // Seleccionar el formulario y agregar un evento al enviarlo
+    document.getElementById('location-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Evita que la página se recargue al enviar el formulario
+
+        // Obtener la ubicación ingresada por el usuario
+        const location = document.getElementById('location').value;
+
+        // Hacer una solicitud POST a la Logic App
+        fetch(logicAppUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ location }) // Enviar la ubicación como JSON
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error en la respuesta de la Logic App");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Validar si se obtuvieron coordenadas
+                if (!data.latitude || !data.longitude) {
+                    throw new Error("No se obtuvieron coordenadas válidas.");
+                }
+
+                // Mostrar los datos en el contenedor #weather-info
+                document.getElementById('weather-info').innerHTML = `
+                    <p><strong>Air Quality Index (AQI):</strong> ${data.aqi}</p>
+                    <p><strong>Recommendations:</strong> ${data.recommendations}</p>
+                `;
+
+                // Llamar a la función para mostrar el mapa con las coordenadas
+                loadMap(data.latitude, data.longitude);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Hubo un problema con la solicitud: ' + error.message);
+            });
+    });
+
+    // ------------------------------------------------
+    // Configuración de Azure Maps
+    // ------------------------------------------------
+
+    // Variable para almacenar el mapa
+    let map;
+
+    // Función para cargar el mapa en el contenedor #map
+    function loadMap(latitude, longitude) {
+        if (isNaN(latitude) || isNaN(longitude)) {
+            console.error("Coordenadas inválidas:", latitude, longitude);
+            alert("No se puede mostrar el mapa debido a coordenadas inválidas.");
+            return;
         }
 
-        #left-panel {
-            width: 30%;
-            background-color: #cce7e8;
-            padding: 20px;
-        }
+        if (!map) {
+            // Inicializar el mapa la primera vez
+            map = new atlas.Map('map', {
+                center: [longitude, latitude],
+                zoom: 10,
+                authOptions: {
+                    authType: 'subscriptionKey',
+                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave
+                }
+            });
 
-        #right-panel {
-            width: 70%;
-            position: relative;
+            // Agregar un marcador en la ubicación
+            const marker = new atlas.HtmlMarker({
+                position: [longitude, latitude],
+                text: '📍'
+            });
+            map.markers.add(marker);
+        } else {
+            // Actualizar el centro del mapa si ya está inicializado
+            map.setCamera({
+                center: [longitude, latitude]
+            });
         }
-
-        #map {
-            width: 100%;
-            height: 100vh;
-        }
-
-        #controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            background-color: white;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div id="left-panel">
-        <h1>MovePure</h1>
-        <p>Realtime Checker Quality Air for Move</p>
-        <form id="location-form">
-            <label for="location">Introduce tu ubicación:</label>
-            <input type="text" id="location" name="location" placeholder="Ej. Madrid" required>
-            <button type="submit">Buscar</button>
-        </form>
-        <div id="info">
-            <p><strong>Location:</strong> <span id="location-name">Barcelona</span></p>
-            <p><strong>Quality Air:</strong> <span id="quality-air">N/A</span></p>
-            <p><strong>Que hacer?:</strong> <span id="recommendations">N/A</span></p>
-        </div>
-    </div>
-    <div id="right-panel">
-        <div id="map"></div>
-        <div id="controls">
-            <button>YOGA</button>
-            <button>WALK</button>
-            <button>RUN</button>
-        </div>
-    </div>
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    }
+});
