@@ -1,22 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con tu URL
-    const locationName = document.getElementById('location-name');
-    const qualityAir = document.getElementById('quality-air');
-    const recommendations = document.getElementById('recommendations');
-    const resultsDiv = document.getElementById('results');
-    const activitiesDiv = document.getElementById('activities');
-    let map;
+    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE";
 
-    // Inicializar mapa con ubicación predeterminada (Barcelona)
-    const initialLatitude = 41.3851; // Coordenada de Barcelona
-    const initialLongitude = 2.1734; // Coordenada de Barcelona
+    let map = new atlas.Map('map', {
+        center: [-3.7035825, 40.4167047], // Coordenadas iniciales de Barcelona
+        zoom: 10,
+        authOptions: {
+            authType: 'subscriptionKey',
+            subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj"
+        }
+    });
 
-    loadMap(initialLatitude, initialLongitude);
-
-    // Manejar envío del formulario
     document.getElementById('location-form').addEventListener('submit', function (event) {
         event.preventDefault();
-
         const location = document.getElementById('location').value;
 
         fetch(logicAppUrl, {
@@ -26,74 +21,24 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({ location })
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error en la respuesta de la Logic App");
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log("Datos recibidos:", data);
-
-                // Validar datos y extraer coordenadas
-                const firstResult = data.results?.[0];
-                if (!firstResult || !firstResult.geometry) {
-                    throw new Error("No se encontraron coordenadas válidas.");
+                if (!data.latitude || !data.longitude) {
+                    throw new Error("Coordenadas no válidas");
                 }
 
-                const { lat, lng } = firstResult.geometry;
+                document.getElementById('location-name').textContent = location;
+                document.getElementById('quality-air').textContent = data.aqi || 'N/A';
+                document.getElementById('recommendations').textContent = data.recommendations || 'N/A';
 
-                // Actualizar información
-                locationName.textContent = location;
-                qualityAir.textContent = data.aqi || "N/A";
-                recommendations.textContent = data.recommendations || "N/A";
-
-                // Mostrar resultados y actividades
-                resultsDiv.classList.remove('hidden');
-                activitiesDiv.classList.remove('hidden');
-
-                // Actualizar mapa
-                loadMap(lat, lng);
+                map.setCamera({
+                    center: [data.longitude, data.latitude],
+                    zoom: 12
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Error al obtener datos: ' + error.message);
             });
     });
-
-    function loadMap(latitude, longitude) {
-        if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-            console.error("Coordenadas inválidas:", latitude, longitude);
-            return;
-        }
-
-        if (!map) {
-            map = new atlas.Map('map', {
-                center: [longitude, latitude],
-                zoom: 10,
-                authOptions: {
-                    authType: 'subscriptionKey',
-                    subscriptionKey: "<TU_CLAVE_DE_AZURE_MAPS>" // Reemplaza con tu clave
-                }
-            });
-
-            const marker = new atlas.HtmlMarker({
-                position: [longitude, latitude],
-                text: '📍'
-            });
-
-            map.markers.add(marker);
-        } else {
-            map.setCamera({
-                center: [longitude, latitude]
-            });
-
-            map.markers.clear();
-            const marker = new atlas.HtmlMarker({
-                position: [longitude, latitude],
-                text: '📍'
-            });
-            map.markers.add(marker);
-        }
-    }
 });
