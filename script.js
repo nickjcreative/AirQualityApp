@@ -1,39 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather and AQI Checker</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #map {
-            width: 100%;
-            height: 400px;
-            margin-top: 20px;
-        }
-        #weather-info {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Weather and AQI Checker</h1>
-    <form id="location-form">
-        <label for="location">Enter Location:</label>
-        <input type="text" id="location" name="location" required>
-        <button type="submit">Search</button>
-    </form>
+// URL de tu Logic App
+const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL del trigger HTTP
 
-    <!-- Container for Azure Map -->
-    <div id="map"></div>
+// Seleccionar el formulario y agregar un evento al enviarlo
+document.getElementById('location-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita que la página se recargue al enviar el formulario
 
-    <!-- Container for AQI recommendations -->
-    <div id="weather-info"></div>
+    // Obtener la ubicación ingresada por el usuario
+    const location = document.getElementById('location').value;
 
-    <!-- Include JavaScript file -->
-    <script src="script.js"></script>
-</body>
-</html>
+    // Hacer una solicitud POST a la Logic App
+    fetch(logicAppUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ location }) // Enviar la ubicación como JSON
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Error en la respuesta de la Logic App");
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Mostrar los datos en el contenedor #weather-info
+        document.getElementById('weather-info').innerHTML = `
+            <p><strong>Air Quality Index (AQI):</strong> ${data.aqi}</p>
+            <p><strong>Recommendations:</strong> ${data.recommendations}</p>
+        `;
+
+        // Mostrar el mapa centrado en las coordenadas
+        loadMap(data.latitude, data.longitude);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Hubo un problema con la solicitud: ' + error.message);
+    });
+});
