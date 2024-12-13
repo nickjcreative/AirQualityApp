@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // URL de tu Logic App
-    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con tu URL
+    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL del trigger HTTP
 
     const form = document.getElementById('location-form');
     const weatherInfo = document.getElementById('weather-info');
@@ -30,17 +29,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                // Actualizar la página con los resultados
+                console.log("Datos recibidos:", data);
+
+                const latitude = data.latitude;
+                const longitude = data.longitude;
+
+                if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+                    throw new Error("Coordenadas no válidas");
+                }
+
                 locationName.textContent = location;
                 qualityAir.textContent = data.aqi;
                 recommendations.textContent = data.recommendations;
 
-                // Mostrar el mapa y la información
                 weatherInfo.classList.remove('hidden');
                 mapContainer.classList.remove('hidden');
 
-                // Cargar el mapa con las coordenadas
-                loadMap(data.latitude, data.longitude);
+                loadMap(latitude, longitude);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -49,8 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function loadMap(latitude, longitude) {
-        if (!latitude || !longitude) {
-            alert("Coordenadas no válidas.");
+        if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+            console.error("Coordenadas inválidas:", latitude, longitude);
+            alert("No se puede cargar el mapa debido a coordenadas inválidas.");
             return;
         }
 
