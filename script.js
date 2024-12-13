@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const locationName = document.getElementById('location-name');
     const qualityAir = document.getElementById('quality-air');
     const recommendations = document.getElementById('recommendations');
+    const resultsDiv = document.getElementById('results');
+    const activitiesDiv = document.getElementById('activities');
     let map;
 
     // Inicializar mapa con ubicación predeterminada (Barcelona)
@@ -46,6 +48,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 qualityAir.textContent = data.aqi || "N/A";
                 recommendations.textContent = data.recommendations || "N/A";
 
+                // Mostrar resultados y actividades
+                resultsDiv.classList.remove('hidden');
+                activitiesDiv.classList.remove('hidden');
+
                 // Actualizar mapa
                 loadMap(lat, lng);
             })
@@ -67,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 zoom: 10,
                 authOptions: {
                     authType: 'subscriptionKey',
-                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave
+                    subscriptionKey: "<TU_CLAVE_DE_AZURE_MAPS>" // Reemplaza con tu clave
                 }
             });
 
