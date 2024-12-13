@@ -3,40 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movepure - Quality Air Checker</title>
-    <link href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" rel="stylesheet">
+    <title>MovePure</title>
     <style>
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eaf5f3;
+        }
+
+        #main-container {
             display: flex;
             height: 100vh;
-            flex-direction: row;
         }
-        #left-panel {
+
+        #sidebar {
             width: 30%;
-            background-color: #cbe8eb;
             padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background-color: #b4dad6;
         }
-        #left-panel h1 {
-            font-size: 2rem;
-            color: #006b6b;
-            text-align: center;
-        }
+
         #map-container {
-            width: 70%;
-            height: 100%;
+            flex-grow: 1;
             position: relative;
         }
+
         #map {
             width: 100%;
             height: 100%;
         }
-        .activities {
+
+        .card-container {
             position: absolute;
             bottom: 20px;
             left: 50%;
@@ -44,65 +41,44 @@
             display: flex;
             gap: 10px;
         }
-        .activity-button {
-            background-color: #ffffff;
-            border: 2px solid #006b6b;
-            border-radius: 20px;
-            padding: 15px 30px;
+
+        .card {
+            background-color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
             text-align: center;
             cursor: pointer;
-            font-size: 1.2rem;
-            color: #006b6b;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        form input {
-            width: 80%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 20px;
-            border: 1px solid #006b6b;
-            font-size: 1rem;
-        }
-        form button {
-            background-color: #006b6b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        #weather-info {
-            margin-top: 20px;
         }
     </style>
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 </head>
 <body>
-    <div id="left-panel">
-        <h1>movepure</h1>
-        <p>Realtime Checker Quality Air for Move</p>
-        <form id="location-form">
-            <label for="location">Introduce tu ubicación</label>
-            <input type="text" id="location" name="location" required placeholder="Escribe tu ubicación">
-            <button type="submit">Buscar</button>
-        </form>
-        <div id="weather-info">
-            <p><strong>Location:</strong> <span id="location-name"></span></p>
-            <p><strong>Quality Air:</strong> <span id="quality-air"></span></p>
-            <p><strong>Que hacer?:</strong> <span id="recommendations"></span></p>
+    <div id="main-container">
+        <div id="sidebar">
+            <h1>MovePure</h1>
+            <p>Realtime Checker Quality Air for Move</p>
+            <form id="location-form">
+                <label for="location">Introduce tu ubicación:</label>
+                <input type="text" id="location" name="location" required>
+                <button type="submit">Buscar</button>
+            </form>
+            <div>
+                <p><strong>Location:</strong> <span id="location-name">Barcelona</span></p>
+                <p><strong>Quality Air:</strong> <span id="quality-air">N/A</span></p>
+                <p><strong>Que hacer?:</strong> <span id="recommendations">N/A</span></p>
+            </div>
+        </div>
+        <div id="map-container">
+            <div id="map"></div>
+            <div class="card-container">
+                <div class="card">YOGA</div>
+                <div class="card">WALK</div>
+                <div class="card">RUN</div>
+            </div>
         </div>
     </div>
-
-    <div id="map-container">
-        <div id="map"></div>
-        <div class="activities">
-            <div class="activity-button">YOGA</div>
-            <div class="activity-button">WALK</div>
-            <div class="activity-button">RUN</div>
-        </div>
-    </div>
-
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html>
