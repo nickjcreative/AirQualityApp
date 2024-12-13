@@ -51,6 +51,10 @@
             text-align: center;
             cursor: pointer;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 </head>
@@ -64,15 +68,15 @@
                 <input type="text" id="location" name="location" required>
                 <button type="submit">Buscar</button>
             </form>
-            <div>
-                <p><strong>Location:</strong> <span id="location-name">Barcelona</span></p>
+            <div id="results" class="hidden">
+                <p><strong>Location:</strong> <span id="location-name">N/A</span></p>
                 <p><strong>Quality Air:</strong> <span id="quality-air">N/A</span></p>
                 <p><strong>Que hacer?:</strong> <span id="recommendations">N/A</span></p>
             </div>
         </div>
         <div id="map-container">
             <div id="map"></div>
-            <div class="card-container">
+            <div id="activities" class="card-container hidden">
                 <div class="card">YOGA</div>
                 <div class="card">WALK</div>
                 <div class="card">RUN</div>
