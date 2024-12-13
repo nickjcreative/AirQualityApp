@@ -18,6 +18,9 @@
             margin-top: 20px;
         }
     </style>
+
+    <!-- Include Azure Maps SDK -->
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 </head>
 <body>
     <h1>Weather and AQI Checker</h1>
@@ -28,7 +31,7 @@
     </form>
 
     <!-- Container for Azure Map -->
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <div id="map"></div>
 
     <!-- Container for AQI recommendations -->
     <div id="weather-info"></div>
