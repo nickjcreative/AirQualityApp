@@ -37,3 +37,26 @@ document.getElementById('location-form').addEventListener('submit', function(eve
         alert('Hubo un problema con la solicitud: ' + error.message);
     });
 });
+
+//
+let map;
+
+// Función para cargar el mapa en el contenedor #map
+function loadMap(latitude, longitude) {
+    if (!map) {
+        // Inicializar el mapa la primera vez
+        map = new atlas.Map('map', {
+            center: [longitude, latitude],
+            zoom: 10,
+            authOptions: {
+                authType: 'subscriptionKey',
+                subscriptionKey: "<TU_CLAVE_DE_AZURE_MAPS>" // Reemplaza con tu clave
+            }
+        });
+    } else {
+        // Actualizar el centro del mapa si ya está inicializado
+        map.setCamera({
+            center: [longitude, latitude]
+        });
+    }
+}
