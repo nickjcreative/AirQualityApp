@@ -1,13 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de tu Logic App
-
-    const form = document.getElementById('location-form');
+    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con tu URL
     const locationName = document.getElementById('location-name');
     const qualityAir = document.getElementById('quality-air');
     const recommendations = document.getElementById('recommendations');
     let map;
 
-    form.addEventListener('submit', function (event) {
+    // Inicializar mapa con ubicación predeterminada (Barcelona)
+    const initialLatitude = 41.3851; // Coordenada de Barcelona
+    const initialLongitude = 2.1734; // Coordenada de Barcelona
+
+    loadMap(initialLatitude, initialLongitude);
+
+    // Manejar envío del formulario
+    document.getElementById('location-form').addEventListener('submit', function (event) {
         event.preventDefault();
 
         const location = document.getElementById('location').value;
@@ -28,30 +33,31 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 console.log("Datos recibidos:", data);
 
-                const latitude = data.latitude;
-                const longitude = data.longitude;
-
-                if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-                    console.error("Coordenadas no válidas:", latitude, longitude);
-                    alert("No se pudieron obtener las coordenadas de la ubicación ingresada. Verifica que sea válida.");
-                    return;
+                // Validar datos y extraer coordenadas
+                const firstResult = data.results?.[0];
+                if (!firstResult || !firstResult.geometry) {
+                    throw new Error("No se encontraron coordenadas válidas.");
                 }
 
-                locationName.textContent = location;
-                qualityAir.textContent = data.aqi;
-                recommendations.textContent = data.recommendations;
+                const { lat, lng } = firstResult.geometry;
 
-                loadMap(latitude, longitude);
+                // Actualizar información
+                locationName.textContent = location;
+                qualityAir.textContent = data.aqi || "N/A";
+                recommendations.textContent = data.recommendations || "N/A";
+
+                // Actualizar mapa
+                loadMap(lat, lng);
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Hubo un problema con la solicitud: ' + error.message);
+                alert('Error al obtener datos: ' + error.message);
             });
     });
 
     function loadMap(latitude, longitude) {
         if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-            console.error("No se puede cargar el mapa debido a coordenadas inválidas:", latitude, longitude);
+            console.error("Coordenadas inválidas:", latitude, longitude);
             return;
         }
 
@@ -61,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 zoom: 10,
                 authOptions: {
                     authType: 'subscriptionKey',
-                    subscriptionKey: "<TU_CLAVE_DE_AZURE_MAPS>" // Reemplaza con tu clave
+                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave
                 }
             });
 
@@ -75,6 +81,13 @@ document.addEventListener('DOMContentLoaded', function () {
             map.setCamera({
                 center: [longitude, latitude]
             });
+
+            map.markers.clear();
+            const marker = new atlas.HtmlMarker({
+                position: [longitude, latitude],
+                text: '📍'
+            });
+            map.markers.add(marker);
         }
     }
 });
