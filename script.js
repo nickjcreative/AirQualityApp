@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de la Logic App
+    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de tu Logic App
 
     const form = document.getElementById('location-form');
     const locationName = document.getElementById('location-name');
@@ -32,7 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const longitude = data.longitude;
 
                 if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-                    throw new Error("Coordenadas no válidas");
+                    console.error("Coordenadas no válidas:", latitude, longitude);
+                    alert("No se pudieron obtener las coordenadas de la ubicación ingresada. Verifica que sea válida.");
+                    return;
                 }
 
                 locationName.textContent = location;
@@ -49,8 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function loadMap(latitude, longitude) {
         if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
-            console.error("Coordenadas inválidas:", latitude, longitude);
-            alert("No se puede cargar el mapa debido a coordenadas inválidas.");
+            console.error("No se puede cargar el mapa debido a coordenadas inválidas:", latitude, longitude);
             return;
         }
 
