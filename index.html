@@ -27,14 +27,33 @@
             color: #006b6b;
             text-align: center;
         }
-        #map {
+        #map-container {
             width: 70%;
             height: 100%;
+            position: relative;
         }
-        form {
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .activities {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            gap: 10px;
+        }
+        .activity-button {
+            background-color: #ffffff;
+            border: 2px solid #006b6b;
+            border-radius: 20px;
+            padding: 15px 30px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #006b6b;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         form input {
             width: 80%;
@@ -55,26 +74,6 @@
         }
         #weather-info {
             margin-top: 20px;
-            font-size: 1rem;
-        }
-        .activities {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-        .activity-button {
-            background-color: #cbe8eb;
-            border: 2px solid #006b6b;
-            border-radius: 20px;
-            padding: 15px 30px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: #006b6b;
-            width: 100px;
-        }
-        .hidden {
-            display: none;
         }
     </style>
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
@@ -88,19 +87,21 @@
             <input type="text" id="location" name="location" required placeholder="Escribe tu ubicación">
             <button type="submit">Buscar</button>
         </form>
-        <div id="weather-info" class="hidden">
+        <div id="weather-info">
             <p><strong>Location:</strong> <span id="location-name"></span></p>
             <p><strong>Quality Air:</strong> <span id="quality-air"></span></p>
             <p><strong>Que hacer?:</strong> <span id="recommendations"></span></p>
-            <div class="activities">
-                <div class="activity-button">YOGA</div>
-                <div class="activity-button">WALK</div>
-                <div class="activity-button">RUN</div>
-            </div>
         </div>
     </div>
 
-    <div id="map" class="hidden"></div>
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="activities">
+            <div class="activity-button">YOGA</div>
+            <div class="activity-button">WALK</div>
+            <div class="activity-button">RUN</div>
+        </div>
+    </div>
 
     <script src="script.js" defer></script>
 </body>
