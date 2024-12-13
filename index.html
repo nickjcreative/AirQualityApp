@@ -8,32 +8,27 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #eaf5f3;
-        }
-
-        #main-container {
             display: flex;
-            height: 100vh;
+            flex-direction: row;
         }
 
-        #sidebar {
+        #left-panel {
             width: 30%;
+            background-color: #cce7e8;
             padding: 20px;
-            background-color: #b4dad6;
         }
 
-        #map-container {
-            flex-grow: 1;
+        #right-panel {
+            width: 70%;
             position: relative;
         }
 
         #map {
             width: 100%;
-            height: 100%;
+            height: 100vh;
         }
 
-        .card-container {
+        #controls {
             position: absolute;
             bottom: 20px;
             left: 50%;
@@ -42,47 +37,39 @@
             gap: 10px;
         }
 
-        .card {
-            background-color: white;
+        button {
             padding: 10px 20px;
+            border: 1px solid #333;
             border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            font-weight: bold;
-            text-align: center;
+            background-color: white;
             cursor: pointer;
         }
-
-        .hidden {
-            display: none;
-        }
     </style>
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 </head>
 <body>
-    <div id="main-container">
-        <div id="sidebar">
-            <h1>MovePure</h1>
-            <p>Realtime Checker Quality Air for Move</p>
-            <form id="location-form">
-                <label for="location">Introduce tu ubicación:</label>
-                <input type="text" id="location" name="location" required>
-                <button type="submit">Buscar</button>
-            </form>
-            <div id="results" class="hidden">
-                <p><strong>Location:</strong> <span id="location-name">N/A</span></p>
-                <p><strong>Quality Air:</strong> <span id="quality-air">N/A</span></p>
-                <p><strong>Que hacer?:</strong> <span id="recommendations">N/A</span></p>
-            </div>
-        </div>
-        <div id="map-container">
-            <div id="map"></div>
-            <div id="activities" class="card-container hidden">
-                <div class="card">YOGA</div>
-                <div class="card">WALK</div>
-                <div class="card">RUN</div>
-            </div>
+    <div id="left-panel">
+        <h1>MovePure</h1>
+        <p>Realtime Checker Quality Air for Move</p>
+        <form id="location-form">
+            <label for="location">Introduce tu ubicación:</label>
+            <input type="text" id="location" name="location" placeholder="Ej. Madrid" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="info">
+            <p><strong>Location:</strong> <span id="location-name">Barcelona</span></p>
+            <p><strong>Quality Air:</strong> <span id="quality-air">N/A</span></p>
+            <p><strong>Que hacer?:</strong> <span id="recommendations">N/A</span></p>
         </div>
     </div>
+    <div id="right-panel">
+        <div id="map"></div>
+        <div id="controls">
+            <button>YOGA</button>
+            <button>WALK</button>
+            <button>RUN</button>
+        </div>
+    </div>
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
