@@ -1,36 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Quality Checker</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://atlas.microsoft.com/sdk/js/atlas.min.js"></script>
-    <script>
-        const azureMapsKey = "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj"; <!-- Reemplaza con tu clave de Azure Maps -->
-    </script>
+    <title>Weather and Maps</title>
 </head>
 <body>
-    <header>
-        <h1>Air Quality Checker</h1>
-    </header>
-    <main>
-        <div class="form-container">
-            <input type="text" id="location" placeholder="Enter your location">
-            <select id="activity">
-                <option value="running">Running</option>
-                <option value="walking">Walking</option>
-                <option value="cycling">Cycling</option>
-            </select>
-            <button id="checkAQI">Check Air Quality</button>
-            <button id="useMyLocation">Use My Location</button>
-        </div>
-        <div id="map" class="map"></div>
-        <div id="result" class="result"></div>
-    </main>
-    <footer>
-        <p>Powered by OpenWeatherMap, OpenCage, and Azure Maps</p>
-    </footer>
-    <script src="script.js"></script>
+    <h1>Weather and Maps Demo</h1>
+    <form id="location-form">
+        <label for="location">Enter Location:</label>
+        <input type="text" id="location" name="location" required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+    <div id="weather-info"></div>
 </body>
+<script>
+    // Aquí se agregarán los scripts para conectar con las APIs
+</script>
 </html>
