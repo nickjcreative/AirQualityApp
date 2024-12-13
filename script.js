@@ -1,13 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL del trigger HTTP
+    const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de la Logic App
 
     const form = document.getElementById('location-form');
-    const weatherInfo = document.getElementById('weather-info');
-    const mapContainer = document.getElementById('map');
     const locationName = document.getElementById('location-name');
     const qualityAir = document.getElementById('quality-air');
     const recommendations = document.getElementById('recommendations');
-
     let map;
 
     form.addEventListener('submit', function (event) {
@@ -42,9 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 qualityAir.textContent = data.aqi;
                 recommendations.textContent = data.recommendations;
 
-                weatherInfo.classList.remove('hidden');
-                mapContainer.classList.remove('hidden');
-
                 loadMap(latitude, longitude);
             })
             .catch(error => {
@@ -66,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 zoom: 10,
                 authOptions: {
                     authType: 'subscriptionKey',
-                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave
+                    subscriptionKey: "<TU_CLAVE_DE_AZURE_MAPS>" // Reemplaza con tu clave
                 }
             });
 
