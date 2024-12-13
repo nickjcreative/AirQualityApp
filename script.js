@@ -24,6 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
+                // Validar si se obtuvieron coordenadas
+                if (!data.latitude || !data.longitude) {
+                    throw new Error("No se obtuvieron coordenadas válidas.");
+                }
+
                 // Mostrar los datos en el contenedor #weather-info
                 document.getElementById('weather-info').innerHTML = `
                     <p><strong>Air Quality Index (AQI):</strong> ${data.aqi}</p>
@@ -48,6 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para cargar el mapa en el contenedor #map
     function loadMap(latitude, longitude) {
+        if (isNaN(latitude) || isNaN(longitude)) {
+            console.error("Coordenadas inválidas:", latitude, longitude);
+            alert("No se puede mostrar el mapa debido a coordenadas inválidas.");
+            return;
+        }
+
         if (!map) {
             // Inicializar el mapa la primera vez
             map = new atlas.Map('map', {
@@ -55,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 zoom: 10,
                 authOptions: {
                     authType: 'subscriptionKey',
-                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave de Azure Maps
+                    subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave
                 }
             });
 
