@@ -1,3 +1,6 @@
+// URL de tu Logic App
+const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL del trigger HTTP
+
 // Seleccionar el formulario y agregar un evento al enviarlo
 document.getElementById('location-form').addEventListener('submit', function(event) {
     event.preventDefault(); // Evita que la página se recargue al enviar el formulario
@@ -5,18 +8,20 @@ document.getElementById('location-form').addEventListener('submit', function(eve
     // Obtener la ubicación ingresada por el usuario
     const location = document.getElementById('location').value;
 
-    // URL de tu Azure Logic App
-    const logicAppUrl = 'https://<URL_de_tu_Logic_App>';
-
-    // Realizar una solicitud POST a la Logic App
+    // Hacer una solicitud POST a la Logic App
     fetch(logicAppUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ location: location }) // Enviar la ubicación como JSON
+        body: JSON.stringify({ location }) // Enviar la ubicación como JSON
     })
-    .then(response => response.json()) // Procesar la respuesta como JSON
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Error en la respuesta de la Logic App");
+        }
+        return response.json();
+    })
     .then(data => {
         // Mostrar los datos en el contenedor #weather-info
         document.getElementById('weather-info').innerHTML = `
@@ -24,10 +29,11 @@ document.getElementById('location-form').addEventListener('submit', function(eve
             <p><strong>Recommendations:</strong> ${data.recommendations}</p>
         `;
 
-        // Llamar a la función para mostrar el mapa con las coordenadas
+        // Mostrar el mapa centrado en las coordenadas
         loadMap(data.latitude, data.longitude);
     })
     .catch(error => {
-        console.error('Error al conectar con la Logic App:', error);
+        console.error('Error:', error);
+        alert('Hubo un problema con la solicitud: ' + error.message);
     });
 });
