@@ -1,20 +1,44 @@
 // URL de tu Logic App
-const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de tu trigger HTTP
+const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE";
 
-// Seleccionar el formulario y agregar un evento al enviarlo
-document.getElementById('location-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Evita que la página se recargue al enviar el formulario
+// Variable para el mapa
+let map;
 
-    // Obtener la ubicación ingresada por el usuario
+// Inicializar el mapa con Barcelona por defecto
+document.addEventListener('DOMContentLoaded', () => {
+    loadMap(41.3851, 2.1734); // Coordenadas de Barcelona
+});
+
+// Función para inicializar o actualizar el mapa
+function loadMap(latitude, longitude) {
+    if (!map) {
+        map = new atlas.Map('map', {
+            center: [longitude, latitude],
+            zoom: 10,
+            authOptions: {
+                authType: 'subscriptionKey',
+                subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj"
+            }
+        });
+    } else {
+        map.setCamera({
+            center: [longitude, latitude]
+        });
+    }
+}
+
+// Escuchar el formulario para buscar ubicación
+document.getElementById('location-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+
     const location = document.getElementById('location').value;
 
-    // Hacer una solicitud POST a la Logic App
     fetch(logicAppUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ location }) // Enviar la ubicación como JSON
+        body: JSON.stringify({ location })
     })
         .then(response => {
             if (!response.ok) {
@@ -23,44 +47,20 @@ document.getElementById('location-form').addEventListener('submit', function (ev
             return response.json();
         })
         .then(data => {
-            // Mostrar los datos en el contenedor #weather-info
+            const { latitude, longitude, aqi, recommendations } = data;
+
+            // Actualizar la información en la página
             document.getElementById('weather-info').innerHTML = `
-                <p><strong>Air Quality Index (AQI):</strong> ${data.aqi}</p>
-                <p><strong>Recommendations:</strong> ${data.recommendations}</p>
+                <p><strong>Location:</strong> ${location}</p>
+                <p><strong>Quality Air:</strong> ${aqi}</p>
+                <p><strong>Que hacer?:</strong> ${recommendations}</p>
             `;
 
-            // Llamar a la función para mostrar el mapa con las coordenadas
-            loadMap(data.latitude, data.longitude);
+            // Actualizar el mapa con las coordenadas proporcionadas
+            loadMap(latitude, longitude);
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Hubo un problema con la solicitud: ' + error.message);
+            alert('Error al obtener la información: ' + error.message);
         });
 });
-
-// ------------------------------------------------
-// Configuración de Azure Maps
-// ------------------------------------------------
-
-// Variable para almacenar el mapa
-let map;
-
-// Función para cargar el mapa en el contenedor #map
-function loadMap(latitude, longitude) {
-    if (!map) {
-        // Inicializar el mapa la primera vez
-        map = new atlas.Map('map', {
-            center: [longitude, latitude],
-            zoom: 10,
-            authOptions: {
-                authType: 'subscriptionKey',
-                subscriptionKey: "31sqeG1tgZibbGlCVSjGMTp7Ui9ZPC816xcx30NvlhiLZpcO5iqkJQQJ99ALAC5RqLJXG3hSAAAgAZMP3XTj" // Reemplaza con tu clave de Azure Maps
-            }
-        });
-    } else {
-        // Actualizar el centro del mapa si ya está inicializado
-        map.setCamera({
-            center: [longitude, latitude]
-        });
-    }
-}
