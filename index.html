@@ -7,12 +7,27 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        #left-panel {
+            width: 40%;
+            padding: 20px;
+            background-color: #e6f7f9; /* Color de fondo para la parte izquierda */
+            box-sizing: border-box;
+        }
+        #right-panel {
+            width: 60%;
+            position: relative;
         }
         #map {
             width: 100%;
-            height: 400px;
-            margin-top: 20px;
+            height: 100%;
+        }
+        form {
+            margin-bottom: 20px;
         }
         #weather-info {
             margin-top: 20px;
@@ -26,18 +41,23 @@
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 </head>
 <body>
-    <h1>Weather and AQI Checker</h1>
-    <form id="location-form">
-        <label for="location">Enter Location:</label>
-        <input type="text" id="location" name="location" required>
-        <button type="submit">Search</button>
-    </form>
-
-    <!-- Container for Azure Map -->
-    <div id="map"></div>
-
-    <!-- Container for AQI recommendations -->
-    <div id="weather-info"></div>
+    <div id="left-panel">
+        <h1>MovePure</h1>
+        <p>Realtime Checker Quality Air for Move</p>
+        <form id="location-form">
+            <label for="location">Introduce tu ubicación:</label>
+            <input type="text" id="location" name="location" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="weather-info">
+            <p><strong>Location:</strong> N/A</p>
+            <p><strong>Quality Air:</strong> N/A</p>
+            <p><strong>¿Qué hacer?:</strong> N/A</p>
+        </div>
+    </div>
+    <div id="right-panel">
+        <div id="map"></div>
+    </div>
 
     <!-- Include JavaScript file -->
     <script src="script.js" defer></script>
