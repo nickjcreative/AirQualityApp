@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather and AQI Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+        #weather-info {
+            margin-top: 20px;
+        }
+    </style>
+
+    <!-- Include Azure Maps CSS -->
+    <link href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" rel="stylesheet">
+
+    <!-- Include Azure Maps SDK -->
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+</head>
+<body>
+    <h1>Weather and AQI Checker</h1>
+    <form id="location-form">
+        <label for="location">Enter Location:</label>
+        <input type="text" id="location" name="location" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Container for Azure Map -->
+    <div id="map"></div>
+
+    <!-- Container for AQI recommendations -->
+    <div id="weather-info"></div>
+
+    <!-- Include JavaScript file -->
+    <script src="script.js" defer></script>
+</body>
+</html>
