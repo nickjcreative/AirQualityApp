@@ -1,5 +1,5 @@
 // URL de tu Logic App
-const logicAppUrl = "https://<URL_DE_TU_LOGIC_APP>"; // Reemplaza con la URL de tu trigger HTTP
+const logicAppUrl = "https://prod-29.spaincentral.logic.azure.com:443/workflows/3954ab7e285f4c6a926580eee78a8bca/triggers/Step1/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FStep1%2Frun&sv=1.0&sig=tQYqGAH3nJKisF0xeFcGJ8OeR7655sZ9B7qvH8lwNkE"; // Reemplaza con la URL de tu trigger HTTP
 
 // Seleccionar el formulario y agregar un evento al enviarlo
 document.getElementById('location-form').addEventListener('submit', function (event) {
